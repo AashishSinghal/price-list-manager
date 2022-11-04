@@ -39,4 +39,5 @@ export const clientSchema = z.object({
 export const clientEnv = {
   // NEXT_PUBLIC_BAR: process.env.NEXT_PUBLIC_BAR,
   NEXT_PUBLIC_MONGO_DB_URL: process.env.NEXT_PUBLIC_MONGO_DB_URL,
+  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
 };
