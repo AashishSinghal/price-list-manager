@@ -14,12 +14,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "noUncheckedIndexedAccess": true,
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    "ignoreBuildErrors": true
+    "noUncheckedIndexedAccess": true
   },
   "include": [
     "next-env.d.ts",
