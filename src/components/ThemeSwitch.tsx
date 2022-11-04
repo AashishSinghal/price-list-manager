@@ -34,7 +34,6 @@ const ThemeSwitch = () => {
     "coffee",
     "winter",
   ];
-  useEffect(() => {}, []);
 
   const handleThemeChange = (e) => {
     // e.preventDefault()
