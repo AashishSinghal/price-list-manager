@@ -27,6 +27,7 @@ export const serverSchema = z.object({
 export const clientSchema = z.object({
   // NEXT_PUBLIC_BAR: z.string(),
   NEXT_PUBLIC_MONGO_DB_URL: z.string(),
+  NEXT_PUBLIC_BASE_URL: z.string(),
 });
 
 /**
