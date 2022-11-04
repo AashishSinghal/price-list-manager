@@ -7,6 +7,7 @@ import { z } from "zod";
  */
 export const serverSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
+  NEXT_PUBLIC_MONGO_DB_URL: z.string(),
   // NEXTAUTH_SECRET: z.string(),
   // NEXTAUTH_URL: z.preprocess(
   //   // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
@@ -36,4 +37,5 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   // NEXT_PUBLIC_BAR: process.env.NEXT_PUBLIC_BAR,
+  NEXT_PUBLIC_MONGO_DB_URL: process.env.NEXT_PUBLIC_MONGO_DB_URL,
 };
