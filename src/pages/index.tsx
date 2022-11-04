@@ -31,7 +31,9 @@ const Home: NextPage = () => {
     setResults(data);
   }, []);
 
-  const handleSearch = () => {};
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+  };
   const handleOnChange = (e) => {
     e.preventDefault();
     setFormData({
@@ -70,7 +72,7 @@ const Home: NextPage = () => {
             autoFocus
             placeholder="Search Products..."
             value={searchText}
-            onChange={handleSearch}
+            onChange={(e) => handleSearch(e)}
             className="mim-w-xs input-bordered input w-full flex-1 border "
           />
           <AddProduct />
