@@ -1,7 +1,7 @@
 // /lib/dbConnect.js
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGO_DB_URL;
+const MONGODB_URI = process.env.NEXT_PUBLIC_MONGO_DB_URL;
 
 /**
  * Global is used here to maintain a cached connection across hot reloads
