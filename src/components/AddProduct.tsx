@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { postProduct } from "../lib/apiCalls";
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -19,17 +20,10 @@ const AddProduct = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    axios
-      .post(`http://localhost:3000/api/products`, formData)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await postProduct(formData);
   };
   return (
     <>
@@ -47,8 +41,8 @@ const AddProduct = () => {
           </label>
           <h3 className="text-lg font-bold">Fill Product details</h3>
           <p className="py-4">
-            You&apos;ve been selected for a chance to get one year of subscription to
-            use Wikipedia for free!
+            You&apos;ve been selected for a chance to get one year of
+            subscription to use Wikipedia for free!
           </p>
           <form
             className="min-w-xs form-control w-full items-center"
