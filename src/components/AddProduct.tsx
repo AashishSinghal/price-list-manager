@@ -27,7 +27,7 @@ const AddProduct = () => {
   };
   return (
     <>
-      <label htmlFor="my-modal" className="btn">
+      <label htmlFor="my-modal" className="btn btn-primary">
         + Add Product
       </label>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
