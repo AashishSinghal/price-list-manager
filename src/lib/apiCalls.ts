@@ -16,8 +16,17 @@ export async function getProducts() {
 export async function postProduct(data: IProduct) {
   try {
     const res = axios.post(`${BASE_URL}/api/products`, data);
-    console.log(res);
-    return { isSuccess: true };
+    return { isSuccess: true, data };
+  } catch (error) {
+    console.log(error);
+    return { isError: true, error: error };
+  }
+}
+
+export async function deleteProduct(data: string) {
+  try {
+    const res = axios.delete(`${BASE_URL}/api/products`, { data });
+    return { isSuccess: true, res };
   } catch (error) {
     console.log(error);
     return { isError: true, error: error };

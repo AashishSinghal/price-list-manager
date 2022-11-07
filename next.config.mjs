@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 import withPWA from "next-pwa";
-// import runtimeCaching from "next-pwa/cache.js";
-// const withPWA = require("next-pwa");
 
 const nextConfig = withPWA({
   reactStrictMode: true,
@@ -9,10 +7,9 @@ const nextConfig = withPWA({
     dest: "public",
     register: true,
     skipWaiting: true,
+    disable: process.env.NODE_ENV === "development",
   },
 });
-
-// module.exports = nextConfig;
 
 // @ts-check
 /* run the build with this set to skip validation */
@@ -26,26 +23,6 @@ const nextConfig = withPWA({
  * @param {T} config - A generic parameter that flows through to the return type
  * @constraint {{import('next').NextConfig}}
  */
-// /** @type {import('next').NextConfig} */
-// import withPWAOld from "next-pwa";
-// export  withPWA({
-//   pwa: {
-//     dest: "public",
-//     register: true,
-//     disable: process.env.NODE_ENV === "development",
-//     skipWaiting: true,
-//   },
-// });
-
-// export const withPWA = withPWAOld({
-//   // config
-//   pwa: {
-//     dest: "public",
-//     register: true,
-//     disable: process.env.NODE_ENV === "development",
-//     skipWaiting: true,
-//   },
-// });
 
 function defineNextConfig(config) {
   return config;
@@ -70,5 +47,6 @@ export default defineNextConfig({
     locales: ["en"],
     defaultLocale: "en",
   },
+  // Spreading the PWA configs to the default export.
   ...nextConfig,
 });

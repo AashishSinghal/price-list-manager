@@ -30,6 +30,17 @@ export default async function handler(req, res) {
         res.status(400).json({ success: false });
       }
       break;
+
+    case "DELETE":
+      try {
+        console.log("Deleting Prodcut - ", req.body);
+        const products = await Products.deleteOne({ _id: req.body });
+        res.status(201).json({ success: true, data: products });
+      } catch (error) {
+        console.log("Error Deleting Prodcut");
+        // console.log(res.json());
+        res.status(400).json({ success: false });
+      }
     default:
       // console.log(res.json());
       res.status(400).json({ success: false });

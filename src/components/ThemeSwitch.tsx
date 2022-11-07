@@ -1,47 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { capitalizeFirstLetter } from "../lib/utils";
+import {
+  capitalizeFirstLetter,
+  getTheme,
+  setTheme as setLocalTheme,
+} from "../lib/utils";
 
 const ThemeSwitch = () => {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const themes = [
     "light",
     "dark",
-    "cupcake",
-    "bumblebee",
-    "emerald",
-    "corporate",
-    "synthwave",
-    "retro",
-    "cyberpunk",
-    "valentine",
-    "halloween",
-    "garden",
-    "forest",
-    "aqua",
-    "lofi",
-    "pastel",
-    "fantasy",
-    "wireframe",
-    "black",
-    "luxury",
-    "dracula",
-    "cmyk",
-    "autumn",
-    "business",
-    "acid",
-    "lemonade",
-    "night",
-    "coffee",
-    "winter",
+    // "cupcake",
+    // "bumblebee",
+    // "emerald",
+    // "corporate",
+    // "synthwave",
+    // "retro",
+    // "cyberpunk",
+    // "valentine",
+    // "halloween",
+    // "garden",
+    // "forest",
+    // "aqua",
+    // "lofi",
+    // "pastel",
+    // "fantasy",
+    // "wireframe",
+    // "black",
+    // "luxury",
+    // "dracula",
+    // "cmyk",
+    // "autumn",
+    // "business",
+    // "acid",
+    // "lemonade",
+    // "night",
+    // "coffee",
+    // "winter",
   ];
 
-  const handleThemeChange = (e) => {
-    // e.preventDefault()
+  useEffect(() => {
+    setTheme((prev) => {
+      updateDocumentTheme(getTheme() || prev);
+      return getTheme() || prev;
+    });
+  }, []);
+
+  const updateDocumentTheme = (theme: string) => {
     const html = document.getElementsByTagName("html");
-    html[0]?.setAttribute("data-theme", e.target.value);
-    console.log(html);
+    html[0]?.setAttribute("data-theme", theme);
+  };
+
+  const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // e.preventDefault()
+    updateDocumentTheme(e.target.value);
+    setLocalTheme(e.target.value);
     setTheme(e.target.value);
   };
+
   return (
     <select
       className="select-bordered select w-full max-w-xs"
@@ -55,7 +71,6 @@ const ThemeSwitch = () => {
           </option>
         );
       })}
-      <option>Homer</option>
     </select>
   );
 };

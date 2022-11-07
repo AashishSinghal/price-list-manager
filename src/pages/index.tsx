@@ -9,43 +9,34 @@ import { IProduct } from "../types";
 import Card from "../components/Card";
 import { getProducts, postProduct } from "../lib/apiCalls";
 import { AppContext } from "../lib/AppContext";
+import { useQuery, useQueryClient } from "react-query";
 
 const Home: NextPage = () => {
   const [searchText, setSearchText] = useState("");
   const [results, setResults] = useState([]);
-  const { name } = useContext(AppContext);
-  const [formData, setFormData] = useState<IProduct>({
-    name: "",
-    description: "",
-    unit: 0,
-    price: 0,
-    discount: "",
-    image: "",
-    business: "",
-  });
-  const [addProductModalViisible, setAddProductModalViisible] = useState(false);
+  const queryClient = useQueryClient();
+  const context = useContext(AppContext);
 
-  useState(async () => {
-    const data = await getProducts();
-    console.log(name);
-    setResults(data);
-  }, []);
+  const { data: products, isLoading } = useQuery(["get-products"], getProducts);
+
+  const searchFilter = (products) => {
+    const data = products.filter((product) => {
+      if (
+        !searchText ||
+        searchText === "" ||
+        product.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchText.toLowerCase())
+      ) {
+        return product;
+      }
+      return null;
+    });
+
+    return data.reverse();
+  };
 
   const handleSearch = (e) => {
     setSearchText(e.target.value);
-  };
-  const handleOnChange = (e) => {
-    e.preventDefault();
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(formData);
-    await postProduct(formData);
   };
 
   return (
@@ -78,9 +69,11 @@ const Home: NextPage = () => {
           <AddProduct />
         </div>
         <br />
-        {results.map((result: IProduct, i) => {
-          return <Card key={i} data={result} />;
-        })}
+        {isLoading
+          ? "Loading..."
+          : searchFilter(products).map((result: IProduct, i) => {
+              return <Card key={i} data={result} />;
+            })}
       </main>
     </>
   );

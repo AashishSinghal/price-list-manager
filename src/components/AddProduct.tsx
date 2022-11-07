@@ -1,19 +1,40 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { postProduct } from "../lib/apiCalls";
+import { getBusinesses, postProduct } from "../lib/apiCalls";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { formValidationSchema } from "../schema";
+
+const initialFormData = {
+  name: "",
+  description: "",
+  unit: 0,
+  price: 0,
+  discount: "",
+  image: "",
+  business: null,
+};
 
 const AddProduct = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    unit: 0,
-    price: 0,
-    discount: "",
-    image: "",
-    business: "",
+  // Access the client
+  const queryClient = useQueryClient();
+  const [formData, setFormData] = useState(initialFormData);
+
+  const { data: businesses, isLoading } = useQuery(
+    ["get-businesses"],
+    getBusinesses
+  );
+
+  const mutation = useMutation(postProduct, {
+    onSuccess: () => {
+      // Invalidate and refetch
+      // console.log("Mutation Success - ", data);
+      queryClient.invalidateQueries("get-products");
+    },
   });
+
   const handleOnChange = (e) => {
     e.preventDefault();
+    console.log(e.target.name, " - ", e.target.value);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -22,12 +43,23 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    await postProduct(formData);
+    const newFormData = {
+      ...formData,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    try {
+      const validatedFormData = formValidationSchema.parse(newFormData);
+      console.log(validatedFormData);
+    } catch (err) {
+      console.log(err);
+    }
+    // mutation.mutate();
+    // setFormData(initialFormData);
   };
   return (
     <>
-      <label htmlFor="my-modal" className="btn btn-primary">
+      <label htmlFor="my-modal" className="btn-primary btn">
         + Add Product
       </label>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
@@ -44,10 +76,7 @@ const AddProduct = () => {
             You&apos;ve been selected for a chance to get one year of
             subscription to use Wikipedia for free!
           </p>
-          <form
-            className="min-w-xs form-control w-full items-center"
-            onSubmit={(e) => handleSubmit(e)}
-          >
+          <form className="min-w-xs form-control w-full items-center">
             <div className="flex w-full flex-wrap">
               <div className="m-3 flex flex-col">
                 <label className="label">
@@ -112,7 +141,7 @@ const AddProduct = () => {
                 <input
                   type="text"
                   name="discount"
-                  required
+                  // required
                   value={formData.discount}
                   onChange={(e) => handleOnChange(e)}
                   placeholder="Discount"
@@ -126,7 +155,7 @@ const AddProduct = () => {
                 <input
                   type="text"
                   name="image"
-                  required
+                  // required
                   value={formData.image}
                   onChange={(e) => handleOnChange(e)}
                   placeholder="Image"
@@ -137,22 +166,42 @@ const AddProduct = () => {
                 <label className="label">
                   <span className="label-text">Business</span>
                 </label>
-                <input
-                  type="text"
-                  name="business"
-                  required
-                  value={formData.business}
-                  onChange={(e) => handleOnChange(e)}
-                  placeholder="Business"
-                  className="input-bordered input w-full max-w-xs"
-                />
+                {isLoading ? (
+                  "Loading ..."
+                ) : (
+                  <select
+                    className="select-bordered select w-full max-w-xs"
+                    name="business"
+                    value={formData.business}
+                    required
+                    onChange={(e) => handleOnChange(e)}
+                    placeholder="Business"
+                  >
+                    <option disabled selected hidden>
+                      Select Business
+                    </option>
+                    {businesses.map((b, i) => {
+                      return (
+                        <option key={i} value={b._id}>
+                          {b.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                )}
               </div>
             </div>
             <br />
             <div className="flex gap-5">
-              <button className="btn mt-6" type="submit">
-                Submit
-              </button>
+              <div className="modal-action">
+                <label
+                  htmlFor="my-modal"
+                  className="btn"
+                  onClick={(e) => handleSubmit(e)}
+                >
+                  Submit
+                </label>
+              </div>
               <div className="modal-action">
                 <label htmlFor="my-modal" className="btn">
                   Cancel
