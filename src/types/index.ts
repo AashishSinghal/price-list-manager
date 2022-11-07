@@ -2,8 +2,8 @@ export type IProduct = {
   _id?: string;
   name: string;
   description: string;
-  unit: number | null;
-  price: number | null;
+  unit: string | null;
+  price: string | null;
   discount: string | null;
   image: string;
   business: string;

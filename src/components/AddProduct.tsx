@@ -18,6 +18,7 @@ const AddProduct = () => {
   // Access the client
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState(initialFormData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: businesses, isLoading } = useQuery(
     ["get-businesses"],
@@ -41,6 +42,10 @@ const AddProduct = () => {
     });
   };
 
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newFormData = {
@@ -51,19 +56,21 @@ const AddProduct = () => {
     try {
       const validatedFormData = formValidationSchema.parse(newFormData);
       console.log(validatedFormData);
+      mutation.mutate(validatedFormData);
+      setFormData(initialFormData);
+      toggleModal();
     } catch (err) {
       console.log(err);
+      alert("error");
     }
-    // mutation.mutate();
-    // setFormData(initialFormData);
   };
   return (
     <>
-      <label htmlFor="my-modal" className="btn-primary btn">
+      <button className="btn-primary btn" onClick={toggleModal}>
         + Add Product
-      </label>
+      </button>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
-      <div className="modal">
+      <div className={`modal ${isModalOpen ? "modal-open" : ""}`}>
         <div className="modal-box relative w-11/12 max-w-5xl">
           <label
             htmlFor="my-modal"
@@ -193,19 +200,14 @@ const AddProduct = () => {
             </div>
             <br />
             <div className="flex gap-5">
+              {/* <div className="modal-action"></div> */}
               <div className="modal-action">
-                <label
-                  htmlFor="my-modal"
-                  className="btn"
-                  onClick={(e) => handleSubmit(e)}
-                >
+                <button className="btn m-3" onClick={(e) => handleSubmit(e)}>
                   Submit
-                </label>
-              </div>
-              <div className="modal-action">
-                <label htmlFor="my-modal" className="btn">
+                </button>
+                <button className="btn m-3" onClick={toggleModal}>
                   Cancel
-                </label>
+                </button>
               </div>
             </div>
           </form>
