@@ -36,6 +36,9 @@ export default defineNextConfig({
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  images: {
+    domain: ["res.cloudinary.com"],
+  },
   reactStrictMode: true,
   swcMinify: true,
   /** Next.js i18n docs:

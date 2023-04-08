@@ -10,6 +10,7 @@ import Card from "../components/Card";
 import { getProducts, postProduct } from "../lib/apiCalls";
 import { AppContext } from "../lib/AppContext";
 import { useQuery, useQueryClient } from "react-query";
+import ImageUploader from "../components/ImageUploader";
 
 const Home: NextPage = () => {
   const [searchText, setSearchText] = useState("");
@@ -57,6 +58,11 @@ const Home: NextPage = () => {
         <div className="flex gap-5 p-2">
           <ThemeSwitch />
         </div>
+        <br />
+        <br />
+
+        <br />
+        <br />
         <div className="container flex items-center justify-around gap-10 p-4">
           <input
             type="text"

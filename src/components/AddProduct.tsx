@@ -4,6 +4,7 @@ import { getBusinesses, postProduct } from "../lib/apiCalls";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { formValidationSchema } from "../schema";
 import Image from "next/image";
+import ImageUploader from "./ImageUploader";
 
 const initialFormData = {
   name: "",
@@ -11,7 +12,7 @@ const initialFormData = {
   unit: 0,
   price: 0,
   discount: "",
-  image: "",
+  image: [],
   business: "",
 };
 
@@ -35,12 +36,21 @@ const AddProduct = () => {
     },
   });
 
-  const handleOnChange = (e: any) => {
+  const handleOnChange = async (e: any) => {
     e.preventDefault();
+    const files = e.target.files;
+
     console.log(e.target.name, " - ", e.target.value);
     if (e.target.name == "image") {
-      console.log(e.target.files);
+      console.log(files);
     }
+
+    // files.map(async (file: any) => {
+    //   await uploadImageAndGetImageUrl(file)
+    //     .then((res) => console.log(res))
+    //     .catch((err) => console.log(err));
+    // });
+
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -49,6 +59,10 @@ const AddProduct = () => {
 
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
+  };
+
+  const imageUploadHandler = (Images: String[]) => {
+    console.log("Images - ", Images);
   };
 
   const handleSubmit = async (
@@ -162,23 +176,7 @@ const AddProduct = () => {
                   className="input-bordered input w-full max-w-xs"
                 />
               </div>
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text">Pick a Image file</span>
-                </label>
-                <input
-                  type="file"
-                  name="image"
-                  // required
-                  value={formData.image}
-                  onChange={(e) => handleOnChange(e)}
-                  placeholder="Image"
-                  className="file-input-bordered file-input w-full max-w-xs"
-                />
-                {previewSource && (
-                  <Image width={20} height={20} src={previewSource} />
-                )}
-              </div>
+              <ImageUploader onChange={imageUploadHandler} />
               <div className="m-3 flex flex-col">
                 <label className="label">
                   <span className="label-text">Business</span>
@@ -194,9 +192,6 @@ const AddProduct = () => {
                     onChange={(e) => handleOnChange(e)}
                     placeholder="Business"
                   >
-                    <option disabled selected hidden>
-                      Select Business
-                    </option>
                     {businesses.map((b, i) => {
                       return (
                         <option key={i} value={b._id}>
@@ -211,11 +206,14 @@ const AddProduct = () => {
             <br />
             <div className="flex gap-5">
               {/* <div className="modal-action"></div> */}
-              <div className="modal-action">
-                <button className="btn m-3" onClick={(e) => handleSubmit(e)}>
+              <div className="modal-action flex gap-2">
+                <button
+                  className="btn-primary btn"
+                  onClick={(e) => handleSubmit(e)}
+                >
                   Submit
                 </button>
-                <button className="btn m-3" onClick={toggleModal}>
+                <button className="btn-primary btn" onClick={toggleModal}>
                   Cancel
                 </button>
               </div>

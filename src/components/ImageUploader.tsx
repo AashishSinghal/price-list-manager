@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { ImageUploadResponse, UploadApiResponse, v2 as cloudinary } from 'cloudinary';
+import { useEffect, useState } from "react";
+import { CloudinaryContext, Image, Transformation } from "cloudinary-react";
+import { Cloudinary } from "@cloudinary/url-gen";
 
 interface ImageUploaderProps {
-  onChange: (images: string[]) => void;
+  onChange: (Images: String[]) => void;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange }) => {
@@ -11,6 +12,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+    console.log(files);
     if (!files) {
       return;
     }
@@ -18,8 +20,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange }) => {
     const newImages = Array.from(files);
     setImages([...images, ...newImages]);
 
-    const newPreviewUrls = Array.from(files).map((file) => URL.createObjectURL(file));
-    setPreviewUrls([...previewUrls, ...newPreviewUrls]);
+    const newPreviewUrls = Array.from(files).map((file) =>
+      window.URL.createObjectURL(file)
+    );
+    // setPreviewUrls([...previewUrls, ...newPreviewUrls]);
   };
 
   const handleRemoveImage = (index: number) => {
@@ -33,23 +37,41 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange }) => {
   };
 
   const handleImageUpload = async (image: File): Promise<string | null> => {
-    const formData = new FormData();
-    formData.append('file', image);
-    formData.append('upload_preset', process.env.CLOUDINARY_UPLOAD_PRESET!);
+    const cloudinary = new Cloudinary({
+      cloud: {
+        cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
+      },
+      url: {
+        secure: true,
+        apiVersion: "v1_1",
+      },
+    });
 
-    try {
-      const response = await cloudinary.uploader.upload(formData);
-      return response.secure_url;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_UPLOAD_PRESET
+    );
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      }
+    );
+    const ImageObj = await response.json();
+    setPreviewUrls([...previewUrls, ImageObj.public_id]);
+    return ImageObj;
   };
 
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
-    const uploadedImages: string[] = [];
+    const uploadedImages: any[] = [];
 
     for (const image of images) {
       const uploadedImageUrl = await handleImageUpload(image);
@@ -57,27 +79,56 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange }) => {
         uploadedImages.push(uploadedImageUrl);
       }
     }
-
+    console.log("uploadedImages - ", uploadedImages);
+    setPreviewUrls([
+      ...previewUrls,
+      ...uploadedImages.map((image) => image.public_id),
+    ]);
     onChange(uploadedImages);
-    setImages([]);
-    setPreviewUrls([]);
   };
 
+  useEffect(() => {
+    console.log("images - ", images);
+    console.log("previewURLs - ", previewUrls);
+  }, [images, previewUrls]);
+
   return (
-    <form onSubmit={handleFormSubmit}>
-      <div>
-        {previewUrls.map((previewUrl, index) => (
-          <div key={index}>
-            <img src={previewUrl} alt={`Preview ${index}`} />
-            <button type="button" onClick={() => handleRemoveImage(index)}>
-              Remove
-            </button>
-          </div>
-        ))}
+    <div className="m-3 flex flex-col">
+      <label className="label">
+        <span className="label-text">Pick a Image file</span>
+      </label>
+      <div className="m-1 flex gap-1">
+        <input
+          type="file"
+          multiple
+          name="image"
+          onChange={handleInputChange}
+          className="file-input-bordered file-input w-full max-w-xs"
+        />
+        <button className="btn-primary btn" onClick={handleFormSubmit}>
+          Upload
+        </button>
       </div>
-      <input type="file" multiple onChange={handleInputChange} />
-      <button type="submit">Upload</button>
-    </form>
+      <CloudinaryContext
+        cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!}
+      >
+        <div className="flex gap-1">
+          {previewUrls.map((previewUrl, index) => (
+            <div key={index} className="flex flex-col gap-1">
+              <Image
+                publicId={previewUrl}
+                cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
+              >
+                <Transformation width="150" crop="scale" />
+              </Image>
+              <button type="button" onClick={() => handleRemoveImage(index)}>
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+      </CloudinaryContext>
+    </div>
   );
 };
 
