@@ -41,10 +41,15 @@ const Card = ({ data }: ICard) => {
           <p>{discount}</p>
           <p>{business}</p>
         </div>
-        <button className="btn-primary btn w-min ">Edit</button>
-        <button className="btn-primary btn w-min" onClick={handleDeleteProduct}>
-          Delete
-        </button>
+        <div className="flex flex-row gap-5 mt-auto">
+          <button className="btn-primary btn w-min ">Edit</button>
+          <button
+            className="btn-primary btn w-min"
+            onClick={handleDeleteProduct}
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

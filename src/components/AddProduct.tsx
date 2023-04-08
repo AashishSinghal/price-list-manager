@@ -3,6 +3,7 @@ import axios from "axios";
 import { getBusinesses, postProduct } from "../lib/apiCalls";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { formValidationSchema } from "../schema";
+import Image from "next/image";
 
 const initialFormData = {
   name: "",
@@ -11,7 +12,7 @@ const initialFormData = {
   price: 0,
   discount: "",
   image: "",
-  business: null,
+  business: "",
 };
 
 const AddProduct = () => {
@@ -19,6 +20,7 @@ const AddProduct = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState(initialFormData);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [previewSource, setPreviewSource] = useState<any>();
 
   const { data: businesses, isLoading } = useQuery(
     ["get-businesses"],
@@ -33,9 +35,12 @@ const AddProduct = () => {
     },
   });
 
-  const handleOnChange = (e) => {
+  const handleOnChange = (e: any) => {
     e.preventDefault();
     console.log(e.target.name, " - ", e.target.value);
+    if (e.target.name == "image") {
+      console.log(e.target.files);
+    }
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -46,7 +51,9 @@ const AddProduct = () => {
     setIsModalOpen((prev) => !prev);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
     const newFormData = {
       ...formData,
@@ -155,19 +162,22 @@ const AddProduct = () => {
                   className="input-bordered input w-full max-w-xs"
                 />
               </div>
-              <div className="m-3 flex flex-col">
+              <div className="form-control w-full max-w-xs">
                 <label className="label">
-                  <span className="label-text">Image</span>
+                  <span className="label-text">Pick a Image file</span>
                 </label>
                 <input
-                  type="text"
+                  type="file"
                   name="image"
                   // required
                   value={formData.image}
                   onChange={(e) => handleOnChange(e)}
                   placeholder="Image"
-                  className="input-bordered input w-full max-w-xs"
+                  className="file-input-bordered file-input w-full max-w-xs"
                 />
+                {previewSource && (
+                  <Image width={20} height={20} src={previewSource} />
+                )}
               </div>
               <div className="m-3 flex flex-col">
                 <label className="label">

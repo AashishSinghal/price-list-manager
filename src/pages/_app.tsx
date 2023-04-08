@@ -5,6 +5,7 @@ import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { AppContextProvider } from "../lib/AppContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ClerkProvider } from "@clerk/nextjs";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -17,7 +18,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <AppContextProvider value={session}>
         <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
+          <ClerkProvider {...pageProps}>
+            <Component {...pageProps} />
+          </ClerkProvider>
         </QueryClientProvider>
       </AppContextProvider>
     </SessionProvider>
