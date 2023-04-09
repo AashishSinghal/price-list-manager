@@ -3,7 +3,7 @@ import { CloudinaryContext, Image, Transformation } from "cloudinary-react";
 import { Cloudinary } from "@cloudinary/url-gen";
 
 interface ImageUploaderProps {
-  onChange: (Images: String[]) => void;
+  onChange: (Images: string[]) => void;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange }) => {

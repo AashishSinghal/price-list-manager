@@ -37,7 +37,7 @@ export default defineNextConfig({
     ignoreBuildErrors: true,
   },
   images: {
-    domain: ["res.cloudinary.com"],
+    domains: ["res.cloudinary.com"],
   },
   reactStrictMode: true,
   swcMinify: true,
