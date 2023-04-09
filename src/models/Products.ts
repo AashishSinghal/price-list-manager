@@ -6,7 +6,7 @@ const ProductsSchema = new Schema({
   unit: Number,
   price: Number,
   discount: String,
-  image: "",
+  image: Array,
   business: "",
   createdOn: Date,
   updatedOn: Date,

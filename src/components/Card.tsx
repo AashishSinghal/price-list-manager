@@ -28,9 +28,12 @@ const Card = ({ data }: ICard) => {
   };
 
   return (
-    <div className="card card-side mb-5 h-64 w-full bg-base-100 shadow-xl">
+    <div className="card w-96 bg-base-100 shadow-xl">
       <figure>
-        <img src="https://placeimg.com/200/280/arch" alt="Movie" />
+        <img
+          src={image[0] || "https://placeimg.com/200/280/arch"}
+          alt="Movie"
+        />
       </figure>
       <div className="card-body">
         <h2 className="card-title">Product Name - {name}</h2>
@@ -41,7 +44,7 @@ const Card = ({ data }: ICard) => {
           <p>{discount}</p>
           <p>{business}</p>
         </div>
-        <div className="flex flex-row gap-5 mt-auto">
+        <div className="mt-auto flex flex-row gap-5">
           <button className="btn-primary btn w-min ">Edit</button>
           <button
             className="btn-primary btn w-min"

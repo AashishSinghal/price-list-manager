@@ -18,7 +18,7 @@ const initialFormData = {
 const AddProduct = () => {
   // Access the client
   const queryClient = useQueryClient();
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState<any>(initialFormData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewSource, setPreviewSource] = useState<any>();
 
@@ -61,7 +61,10 @@ const AddProduct = () => {
   };
 
   const imageUploadHandler = (Images: string[]) => {
-    console.log("Images - ", Images);
+    setFormData({
+      ...formData,
+      image: [...Images],
+    });
   };
 
   const handleSubmit = async (
@@ -99,10 +102,10 @@ const AddProduct = () => {
             ✕
           </label>
           <h3 className="text-lg font-bold">Fill Product details</h3>
-          <p className="py-4">
+          {/* <p className="py-4">
             You&apos;ve been selected for a chance to get one year of
             subscription to use Wikipedia for free!
-          </p>
+          </p> */}
           <form className="min-w-xs form-control w-full items-center">
             <div className="flex w-full flex-wrap">
               <div className="m-3 flex flex-col">
@@ -186,11 +189,14 @@ const AddProduct = () => {
                   <select
                     className="select-bordered select w-full max-w-xs"
                     name="business"
-                    value={formData.business}
+                    // value={formData.business}
                     required
                     onChange={(e) => handleOnChange(e)}
                     placeholder="Business"
                   >
+                    <option disabled selected>
+                      Pick business
+                    </option>
                     {businesses.map((b, i) => {
                       return (
                         <option key={i} value={b._id}>

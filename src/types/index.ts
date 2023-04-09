@@ -5,7 +5,7 @@ export type IProduct = {
   unit: string | null;
   price: string | null;
   discount: string | null;
-  image: string;
+  image: string[];
   business: string;
   createdAt?: Date;
   updatedAt?: Date;

@@ -52,17 +52,12 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-start p-4">
-        <h1 className="text-3xl font-extrabold leading-normal text-gray-700 md:text-[3rem]">
+        <h1 className="text-3xl font-extrabold leading-normal md:text-[3rem]">
           Price List Manager
         </h1>
         <div className="flex gap-5 p-2">
           <ThemeSwitch />
         </div>
-        <br />
-        <br />
-
-        <br />
-        <br />
         <div className="container flex items-center justify-around gap-10 p-4">
           <input
             type="text"
