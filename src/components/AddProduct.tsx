@@ -3,7 +3,6 @@ import axios from "axios";
 import { getBusinesses, postProduct } from "../lib/apiCalls";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { formValidationSchema } from "../schema";
-import Image from "next/image";
 import ImageUploader from "./ImageUploader";
 
 const initialFormData = {
@@ -61,7 +60,7 @@ const AddProduct = () => {
     setIsModalOpen((prev) => !prev);
   };
 
-  const imageUploadHandler = (Images: String[]) => {
+  const imageUploadHandler = (Images: string[]) => {
     console.log("Images - ", Images);
   };
 
